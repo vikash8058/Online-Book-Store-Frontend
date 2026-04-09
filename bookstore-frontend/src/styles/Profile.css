@@ -1,0 +1,207 @@
+.profile-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.profile-page h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+/* Profile Info Card */
+.profile-info-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  color: white;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.profile-details h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.profile-details .role-badge {
+  font-size: 13px;
+  padding: 4px 14px;
+}
+
+/* Two column layout */
+.profile-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Each card */
+.profile-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.profile-card-header {
+  margin-bottom: 24px;
+}
+
+.profile-card-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.profile-card-header p {
+  font-size: 13px;
+  color: #718096;
+}
+
+/* Form elements — reuse global styles */
+.profile-card .form-group {
+  margin-bottom: 16px;
+}
+
+.profile-card .form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 6px;
+}
+
+.profile-card .form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #2d3748;
+  background: #f7fafc;
+  transition: border-color 0.2s;
+}
+
+.profile-card .form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+}
+
+.profile-card .btn-primary {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Password rules */
+.password-rules {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.password-rules p {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.password-rules ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.password-rules li {
+  font-size: 13px;
+  color: #a0aec0;
+  padding-left: 20px;
+  position: relative;
+}
+
+.password-rules li::before {
+  content: '✕';
+  position: absolute;
+  left: 0;
+  color: #fc8181;
+  font-size: 11px;
+}
+
+.password-rules li.valid {
+  color: #48bb78;
+}
+
+.password-rules li.valid::before {
+  content: '✓';
+  color: #48bb78;
+}
+
+/* Password field with toggle */
+.profile-card .password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-card .password-field input {
+  padding-right: 45px;
+}
+
+.profile-card .password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.profile-card .password-toggle:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .profile-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+.google-badge {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 6px;
+}
+
+.google-info-text p {
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 8px 0;
+}
