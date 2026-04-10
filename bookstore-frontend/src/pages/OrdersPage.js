@@ -5,12 +5,29 @@ import API from '../api/axios';
 import React, { useState, useEffect } from 'react';
 import { useNotification } from '../context/NotificationContext';
 import { getMyOrders } from '../api/cartApi';
+import ConfirmDialog from '../components/ConfirmDialog';
 import '../styles/Orders.css';
 
 function OrdersPage() {
   const { showNotification } = useNotification();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    title: '',
+    message: '',
+    confirmLabel: 'Confirm',
+    cancelLabel: 'Cancel',
+    onConfirm: null,
+  });
+
+  const closeConfirmDialog = () => {
+    setConfirmDialog(prev => ({ ...prev, open: false }));
+  };
+
+  const openConfirmDialog = ({ title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel', onConfirm }) => {
+    setConfirmDialog({ open: true, title, message, confirmLabel, cancelLabel, onConfirm });
+  };
 
   useEffect(() => {
     async function fetchOrders() {
@@ -55,18 +72,26 @@ function OrdersPage() {
     }
   }
 
-async function handleCancelOrder(orderId) {
-  if (!window.confirm('Are you sure you want to cancel this order?')) return;
-  try {
-    await API.post(`/api/orders/cancel/${orderId}`);
-    showNotification('Order cancelled successfully', 'success');
-    // Refresh orders
-    const data = await getMyOrders();
-    setOrders(data);
-  } catch (err) {
-    const msg = err.response?.data?.message || 'Could not cancel order';
-    showNotification(msg, 'error');
-  }
+function handleCancelOrder(orderId) {
+  openConfirmDialog({
+    title: 'Cancel Order',
+    message: 'Are you sure you want to cancel this order? This action cannot be undone.',
+    confirmLabel: 'Cancel Order',
+    cancelLabel: 'Keep Order',
+    onConfirm: async () => {
+      try {
+        await API.post(`/api/orders/cancel/${orderId}`);
+        showNotification('Order cancelled successfully', 'success');
+        const data = await getMyOrders();
+        setOrders(data);
+      } catch (err) {
+        const msg = err.response?.data?.message || 'Could not cancel order';
+        showNotification(msg, 'error');
+      } finally {
+        closeConfirmDialog();
+      }
+    },
+  });
 }
 
   if (loading) return <div className="loading">Loading orders...</div>;
@@ -152,6 +177,15 @@ async function handleCancelOrder(orderId) {
           ))}
         </div>
       )}
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmLabel={confirmDialog.confirmLabel}
+        cancelLabel={confirmDialog.cancelLabel}
+        onConfirm={confirmDialog.onConfirm}
+        onClose={closeConfirmDialog}
+      />
     </div>
   );
 }

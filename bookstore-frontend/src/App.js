@@ -31,13 +31,11 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* Protected routes — login required */}
-          <Route path="/books" element={
-            <ProtectedRoute><BooksPage /></ProtectedRoute>
-          } />
-          <Route path="/books/:id" element={
-            <ProtectedRoute><BookDetailPage /></ProtectedRoute>
-          } />
+          // Book browsing routes — open to all
+          <Route path="/books" element={<BooksPage />} />
+          <Route path="/books/:id" element={<BookDetailPage />} />
+
+          // Protected routes — login required
           <Route path="/cart" element={
             <ProtectedRoute><CartPage /></ProtectedRoute>
           } />

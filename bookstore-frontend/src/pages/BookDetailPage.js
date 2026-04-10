@@ -27,7 +27,16 @@ function BookDetailPage() {
     fetchBook();
   }, [id, navigate]);
 
+  // Update addToCart function in BookDetailPage to handle quantity and show notifications
   async function addToCart() {
+    // If not logged in → redirect to login
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showNotification('Please login to add items to cart', 'error');
+      navigate('/login');
+      return;
+    }
+
     try {
       const updatedCart = await addToCartAPI(book.id, quantity);
       showNotification(`"${book.title}" added to cart!`, 'success');

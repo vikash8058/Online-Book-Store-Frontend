@@ -90,18 +90,27 @@ function BooksPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Update addToCart function to handle both book.id and book._id, and to show notifications
   async function addToCart(book) {
-  if (book.stock === 0) return;
-  try {
-    const updatedCart = await addToCartAPI(book.id || book._id, 1);
-    showNotification(`"${book.title}" added to cart!`, 'success');
-    // Sync navbar badge
-    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart.totalItems }));
-  } catch (err) {
-    const msg = err.response?.data?.message || 'Could not add to cart';
-    showNotification(msg, 'error');
+    if (book.stock === 0) return;
+
+    // If not logged in → redirect to login
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showNotification('Please login to add items to cart', 'error');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const updatedCart = await addToCartAPI(book.id || book._id, 1);
+      showNotification(`"${book.title}" added to cart!`, 'success');
+      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart.totalItems }));
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Could not add to cart';
+      showNotification(msg, 'error');
+    }
   }
-}
 
   function getPageNumbers() {
     const pages = [];

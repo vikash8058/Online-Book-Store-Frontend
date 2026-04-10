@@ -90,7 +90,7 @@ function Navbar() {
               <button
                 className="hamburger-btn"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                aria-label="Open menu"
+                aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
               >
                 <span className={`hamburger-icon ${sidebarOpen ? 'open' : ''}`}>
                   <span></span>
@@ -100,10 +100,24 @@ function Navbar() {
               </button>
             </>
           ) : (
-            <div className="navbar-auth-links">
-              <Link to="/login" className="btn-nav-login">Login</Link>
-              <Link to="/register" className="btn-nav-register">Register</Link>
-            </div>
+            <>
+              <div className="navbar-auth-links desktop-only">
+                <Link to="/books" className="btn-nav-books">Browse Books</Link>
+                <Link to="/login" className="btn-nav-login">Login</Link>
+                <Link to="/register" className="btn-nav-register">Register</Link>
+              </div>
+              <button
+                className="hamburger-btn mobile-only"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
+              >
+                <span className={`hamburger-icon ${sidebarOpen ? 'open' : ''}`}>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </button>
+            </>
           )}
         </div>
       </nav>
@@ -115,12 +129,12 @@ function Navbar() {
       <div ref={sidebarRef} className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-avatar">
-            {name?.charAt(0).toUpperCase()}
+            {token ? name?.charAt(0).toUpperCase() : '📚'}
           </div>
           <div className="sidebar-user-info">
-            <p className="sidebar-name">{name}</p>
+            <p className="sidebar-name">{token ? name : 'Welcome'}</p>
             <span className={`role-badge ${role === 'ADMIN' ? 'admin' : 'customer'}`}>
-              {role}
+              {token ? role : 'Guest'}
             </span>
           </div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}>
@@ -129,74 +143,100 @@ function Navbar() {
         </div>
 
         <div className="sidebar-links">
+          {token ? (
+            <>
+              {/* Books — all logged in users */}
+              <Link
+                to="/books"
+                className={`sidebar-link ${currentPath.startsWith('/books') ? 'active' : ''}`}
+              >
+                <span className="sidebar-link-icon">📚</span>
+                Books
+              </Link>
 
-          {/* Books — all logged in users */}
-          <Link
-            to="/books"
-            className={`sidebar-link ${currentPath.startsWith('/books') ? 'active' : ''}`}
-          >
-            <span className="sidebar-link-icon">📚</span>
-            Books
-          </Link>
+              {/* CUSTOMER only */}
+              {role === 'CUSTOMER' && (
+                <>
+                  <Link
+                    to="/cart"
+                    className={`sidebar-link ${currentPath.startsWith('/cart') ? 'active' : ''}`}
+                  >
+                    <span className="sidebar-link-icon">🛒</span>
+                    Cart
+                    {cartCount > 0 && (
+                      <span className="cart-badge">{cartCount}</span>
+                    )}
+                  </Link>
+                  <Link
+                    to="/orders"
+                    className={`sidebar-link ${currentPath.startsWith('/orders') ? 'active' : ''}`}
+                  >
+                    <span className="sidebar-link-icon">📦</span>
+                    My Orders
+                  </Link>
 
-          {/* CUSTOMER only */}
-          {role === 'CUSTOMER' && (
+                  <Link
+                    to="/address"
+                    className={`sidebar-link ${currentPath.startsWith('/address') ? 'active' : ''}`}
+                  >
+                    <span className="sidebar-link-icon">📍</span>
+                    My Addresses
+                  </Link>
+                </>
+              )}
+
+              {/* ADMIN only */}
+              {role === 'ADMIN' && (
+                <Link
+                  to="/admin"
+                  className={`sidebar-link ${currentPath.startsWith('/admin') ? 'active' : ''}`}
+                >
+                  <span className="sidebar-link-icon">⚙️</span>
+                  Dashboard
+                </Link>
+              )}
+
+              {/* Profile — all logged in users */}
+              <Link
+                to="/profile"
+                className={`sidebar-link ${currentPath.startsWith('/profile') ? 'active' : ''}`}
+              >
+                <span className="sidebar-link-icon">👤</span>
+                Profile
+              </Link>
+
+              <div className="sidebar-divider" />
+
+              <button className="sidebar-logout" onClick={handleLogout}>
+                <span className="sidebar-link-icon">🚪</span>
+                Logout
+              </button>
+            </>
+          ) : (
             <>
               <Link
-                to="/cart"
-                className={`sidebar-link ${currentPath.startsWith('/cart') ? 'active' : ''}`}
+                to="/books"
+                className={`sidebar-link ${currentPath.startsWith('/books') ? 'active' : ''}`}
               >
-                <span className="sidebar-link-icon">🛒</span>
-                Cart
-                {cartCount > 0 && (
-                  <span className="cart-badge">{cartCount}</span>
-                )}
+                <span className="sidebar-link-icon">📚</span>
+                Browse Books
               </Link>
               <Link
-                to="/orders"
-                className={`sidebar-link ${currentPath.startsWith('/orders') ? 'active' : ''}`}
+                to="/login"
+                className={`sidebar-link ${currentPath.startsWith('/login') ? 'active' : ''}`}
               >
-                <span className="sidebar-link-icon">📦</span>
-                My Orders
+                <span className="sidebar-link-icon">🔐</span>
+                Login
               </Link>
-
               <Link
-                to="/address"
-                className={`sidebar-link ${currentPath.startsWith('/address') ? 'active' : ''}`}
+                to="/register"
+                className={`sidebar-link ${currentPath.startsWith('/register') ? 'active' : ''}`}
               >
-                <span className="sidebar-link-icon">📍</span>
-                My Addresses
+                <span className="sidebar-link-icon">📝</span>
+                Register
               </Link>
             </>
           )}
-
-          {/* ADMIN only */}
-          {role === 'ADMIN' && (
-            <Link
-              to="/admin"
-              className={`sidebar-link ${currentPath.startsWith('/admin') ? 'active' : ''}`}
-            >
-              <span className="sidebar-link-icon">⚙️</span>
-              Dashboard
-            </Link>
-          )}
-
-          {/* Profile — all logged in users */}
-          <Link
-            to="/profile"
-            className={`sidebar-link ${currentPath.startsWith('/profile') ? 'active' : ''}`}
-          >
-            <span className="sidebar-link-icon">👤</span>
-            Profile
-          </Link>
-
-          <div className="sidebar-divider" />
-
-          <button className="sidebar-logout" onClick={handleLogout}>
-            <span className="sidebar-link-icon">🚪</span>
-            Logout
-          </button>
-
         </div>
       </div>
     </>

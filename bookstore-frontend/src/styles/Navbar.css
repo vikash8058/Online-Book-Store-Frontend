@@ -42,6 +42,7 @@
   gap: 12px;
 }
 
+.btn-nav-books,
 .btn-nav-login {
   color: rgba(255,255,255,0.9);
   text-decoration: none;
@@ -52,6 +53,7 @@
   transition: background 0.2s;
 }
 
+.btn-nav-books:hover,
 .btn-nav-login:hover { background: rgba(255,255,255,0.15); }
 
 .btn-nav-register {
@@ -294,4 +296,47 @@
   padding: 2px 7px;
   border-radius: 10px;
   margin-left: auto;
+}
+
+
+.btn-nav-books,
+.btn-nav-login {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.4);
+  transition: background 0.2s;
+}
+
+.btn-nav-books:hover,
+.btn-nav-login:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-nav-books {
+  font-weight: 600;
+}
+
+.navbar-auth-links.desktop-only {
+  display: flex;
+}
+
+.hamburger-btn.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-auth-links.desktop-only {
+    display: none;
+  }
+
+  .hamburger-btn.mobile-only {
+    display: flex;
+  }
+
+  .navbar-right {
+    gap: 10px;
+  }
 }

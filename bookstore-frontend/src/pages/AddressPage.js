@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNotification } from '../context/NotificationContext';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   getMyAddresses, addAddress,
   updateAddress, deleteAddress, setDefaultAddress
@@ -12,6 +13,22 @@ function AddressPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    title: '',
+    message: '',
+    confirmLabel: 'Confirm',
+    cancelLabel: 'Cancel',
+    onConfirm: null,
+  });
+
+  const closeConfirmDialog = () => {
+    setConfirmDialog(prev => ({ ...prev, open: false }));
+  };
+
+  const openConfirmDialog = ({ title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel', onConfirm }) => {
+    setConfirmDialog({ open: true, title, message, confirmLabel, cancelLabel, onConfirm });
+  };
 
   const emptyForm = {
     fullName: '', phone: '', addressLine: '',
@@ -72,15 +89,24 @@ function AddressPage() {
     }
   }
 
-  async function handleDelete(id) {
-    if (!window.confirm('Delete this address?')) return;
-    try {
-      await deleteAddress(id);
-      showNotification('Address deleted', 'success');
-      fetchAddresses();
-    } catch {
-      showNotification('Failed to delete address', 'error');
-    }
+  function handleDelete(id) {
+    openConfirmDialog({
+      title: 'Delete Address',
+      message: 'Do you really want to delete this address? This action cannot be undone.',
+      confirmLabel: 'Delete',
+      cancelLabel: 'Keep address',
+      onConfirm: async () => {
+        try {
+          await deleteAddress(id);
+          showNotification('Address deleted', 'success');
+          fetchAddresses();
+        } catch {
+          showNotification('Failed to delete address', 'error');
+        } finally {
+          closeConfirmDialog();
+        }
+      },
+    });
   }
 
   async function handleSetDefault(id) {
@@ -234,6 +260,15 @@ function AddressPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmLabel={confirmDialog.confirmLabel}
+        cancelLabel={confirmDialog.cancelLabel}
+        onConfirm={confirmDialog.onConfirm}
+        onClose={closeConfirmDialog}
+      />
     </div>
   );
 }
