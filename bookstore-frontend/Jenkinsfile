@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_USERNAME = 'vikash8058'
+        IMAGE_NAME = 'bookstore-frontend'
+        EC2_IP = '54.147.131.66'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Pulling code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                sh 'docker build -t vikash8058/$IMAGE_NAME:latest .'
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                echo 'Pushing to DockerHub...'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    sh 'docker push vikash8058/$IMAGE_NAME:latest'
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                echo 'Deploying to EC2...'
+                sshagent(['ec2-ssh-key']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP \
+                        "cd ~/bookstore && \
+                        docker pull vikash8058/bookstore-frontend:latest && \
+                        docker-compose up -d frontend"
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success { echo '✅ Frontend deployed successfully!' }
+        failure { echo '❌ Pipeline failed!' }
+    }
+}
