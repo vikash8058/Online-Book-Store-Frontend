@@ -81,7 +81,7 @@ function CheckoutPage() {
 
   function openRazorpay(paymentData) {
     const options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlF5G5ag', // Razorpay test key
       amount: paymentData.amount * 100,   // paise
       currency: 'INR',
       name: 'Book Wala',
