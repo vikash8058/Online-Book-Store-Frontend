@@ -328,6 +328,25 @@
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0 14px;
+    height: 60px;
+  }
+
+  .navbar-brand a {
+    font-size: 18px;
+  }
+
+  .navbar-user {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .role-badge {
+    margin-left: 6px;
+    padding: 2px 8px;
+  }
+
   .navbar-auth-links.desktop-only {
     display: none;
   }
@@ -338,5 +357,34 @@
 
   .navbar-right {
     gap: 10px;
+  }
+
+  .sidebar {
+    width: min(88vw, 320px);
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 12px;
+  }
+
+  .navbar-brand a {
+    font-size: 17px;
+  }
+
+  .navbar-user {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hamburger-btn {
+    padding: 7px 9px;
+  }
+
+  .sidebar {
+    width: 100vw;
   }
 }
