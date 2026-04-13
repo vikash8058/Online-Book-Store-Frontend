@@ -6,7 +6,7 @@ import axios from 'axios';
  * All requests automatically go to localhost:8080
  */
 const API = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://54.226.175.107:8080',
 });
 
 /*
